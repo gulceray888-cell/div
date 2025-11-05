@@ -1,17 +1,16 @@
 name: 6H ETH Bot
 
-# Çalıştırılma zamanları
 on:
   schedule:
-    - cron: "5 0,6,12,18 * * *"   # 03:05, 09:05, 15:05, 21:05 TR time
-  workflow_dispatch:  # manuel tetikleme
+    - cron: "5 0,6,12,18 * * *"   # TR time: 03:05, 09:05, 15:05, 21:05
+  workflow_dispatch:  # Manuel tetikleme
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write  # Repo push izni
+      contents: write   # Repo push izni
 
     steps:
     - name: Checkout repository
@@ -44,3 +43,4 @@ jobs:
           git push
         else
           echo "No changes to commit"
+        fi

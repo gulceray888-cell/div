@@ -1,24 +1,28 @@
 name: 6H ETH Bot
 
+# Çalıştırılma zamanları
 on:
   schedule:
     - cron: "5 0,6,12,18 * * *"   # 03:05, 09:05, 15:05, 21:05 TR time
-  workflow_dispatch:
+  workflow_dispatch:  # manuel tetikleme
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write  # Repo push izni
+
     steps:
-    - name: Repo checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Python setup
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.11"
 
-    - name: Install deps
+    - name: Install dependencies
       run: |
         pip install requests pandas numpy
 
@@ -29,15 +33,14 @@ jobs:
       run: |
         python3 main.py
 
-    - name: Commit last_signal.json (if changed)
+    - name: Commit and push last_signal.json if changed
       run: |
         git config user.name "GitHub Action"
         git config user.email "actions@github.com"
+        # Eğer değişiklik varsa commit ve push et
         if [ -n "$(git status --porcelain)" ]; then
           git add last_signal.json
           git commit -m "Update last_signal.json [auto]"
           git push
         else
           echo "No changes to commit"
-        fi
-
